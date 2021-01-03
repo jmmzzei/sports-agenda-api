@@ -2,10 +2,14 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.firefox.options import Options
+
 from dotenv import load_dotenv 
 import time
 import os
 import re
+
+arr = []
 
 load_dotenv('.env')
 
@@ -13,11 +17,13 @@ def index(arg1):
     return HttpResponse('hello')
 
 def we(arg1):
-    arr = []
-    browser = webdriver.Firefox()
+
+    options = Options()
+    options.headless = True
+    browser = webdriver.Firefox(options=options)
+    
     browser.get(os.getenv('BASE_URL'))
     browser.implicitly_wait(1)
-
     for date in browser.find_elements_by_css_selector(os.getenv('DATE')):
         inDate = {"date": '', "tournament": '', "events": [] }
         cDate = date.find_elements_by_css_selector(os.getenv('DATE_TITLE'))[0]
@@ -31,9 +37,9 @@ def we(arg1):
                     match = events.find_element_by_css_selector(os.getenv('CUSTOM2'))
                     tv = events.find_element_by_css_selector(os.getenv('CUSTOM3'))
                     obj = { 
-                        match : match.text,
-                        hour: hour.text,
-                        tv: tv.text
+                        "match" : match.text,
+                        "hour": hour.text,
+                        "tv": tv.text
                     }
                     inDate["events"].append(obj)
         arr.append(inDate)
