@@ -1,3 +1,8 @@
 from django.db import models
 
-# Create your models here.
+class Event(models.Model):
+    date = models.CharField(max_length=254)
+    tournament = models.CharField(max_length=254)
+    match = models.CharField(max_length=254)
+    hour = models.CharField(max_length=60)
+    tv = models.CharField(max_length=60)
